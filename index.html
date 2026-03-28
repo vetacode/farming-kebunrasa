@@ -1,0 +1,1798 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kebun Rasa — Tanaman Konsumsi Segar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --g0: #0a1a0c;
+        --g1: #122418;
+        --g2: #1a3822;
+        --g3: #1e5c2e;
+        --g4: #2a7a3f;
+        --g5: #3a9e54;
+        --g6: #5aba72;
+        --g7: #8dd49a;
+        --g8: #b8e8c1;
+        --g9: #dff3e3;
+        --cream: #f4efe6;
+        --gold: #c8a84b;
+        --gold-light: #e8c97a;
+      }
+
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--g0);
+        color: var(--g8);
+        font-family: 'DM Sans', sans-serif;
+        overflow-x: hidden;
+        cursor: none;
+      }
+
+      /* Custom Cursor */
+      .cursor {
+        width: 12px;
+        height: 12px;
+        background: var(--g5);
+        border-radius: 50%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 9999;
+        transition: transform 0.1s ease;
+        mix-blend-mode: exclusion;
+      }
+      .cursor-ring {
+        width: 36px;
+        height: 36px;
+        border: 1.5px solid var(--g5);
+        border-radius: 50%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 9998;
+        transition:
+          transform 0.18s ease,
+          width 0.3s,
+          height 0.3s,
+          border-color 0.3s;
+        mix-blend-mode: exclusion;
+      }
+      .cursor-ring.hover {
+        width: 56px;
+        height: 56px;
+        border-color: var(--gold);
+      }
+
+      /* Noise overlay */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+        opacity: 0.035;
+        pointer-events: none;
+        z-index: 9997;
+      }
+
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 3rem;
+        background: linear-gradient(
+          to bottom,
+          rgba(10, 26, 12, 0.95) 0%,
+          transparent 100%
+        );
+        backdrop-filter: blur(2px);
+      }
+      .nav-logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4rem;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        color: var(--g7);
+        text-decoration: none;
+      }
+      .nav-logo span {
+        color: var(--gold);
+        font-style: italic;
+      }
+      .nav-links {
+        display: flex;
+        gap: 2.5rem;
+        list-style: none;
+      }
+      .nav-links a {
+        color: var(--g7);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        opacity: 0.7;
+        transition:
+          opacity 0.3s,
+          color 0.3s;
+      }
+      .nav-links a:hover {
+        opacity: 1;
+        color: var(--g6);
+      }
+      .nav-cta {
+        background: transparent;
+        border: 1px solid var(--g5);
+        color: var(--g6) !important;
+        padding: 0.5rem 1.2rem;
+        border-radius: 2px;
+        opacity: 1 !important;
+        transition: background 0.3s !important;
+      }
+      .nav-cta:hover {
+        background: var(--g3) !important;
+      }
+
+      /* HERO */
+      .hero {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 10rem 4rem 6rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero-tag {
+        font-size: 0.72rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--gold);
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        animation: fadeUp 0.8s 0.3s ease forwards;
+      }
+
+      .hero-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(3.5rem, 6vw, 5.5rem);
+        line-height: 1;
+        font-weight: 900;
+        color: var(--g9);
+        margin-bottom: 1.2rem;
+        opacity: 0;
+        animation: fadeUp 0.8s 0.5s ease forwards;
+      }
+      .hero-title em {
+        font-style: italic;
+        color: var(--g6);
+      }
+
+      .hero-sub {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.25rem;
+        font-weight: 300;
+        font-style: italic;
+        color: var(--g7);
+        max-width: 380px;
+        line-height: 1.6;
+        margin-bottom: 3rem;
+        opacity: 0;
+        animation: fadeUp 0.8s 0.7s ease forwards;
+      }
+
+      .hero-actions {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        opacity: 0;
+        animation: fadeUp 0.8s 0.9s ease forwards;
+      }
+
+      .btn-primary {
+        background: var(--g4);
+        color: var(--g9);
+        padding: 1rem 2.2rem;
+        border: none;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        cursor: none;
+        position: relative;
+        overflow: hidden;
+        transition: background 0.3s;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn-primary::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--g5);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .btn-primary:hover::after {
+        transform: scaleX(1);
+      }
+      .btn-primary span {
+        position: relative;
+        z-index: 1;
+      }
+
+      .btn-ghost {
+        color: var(--g7);
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.3s;
+      }
+      .btn-ghost:hover {
+        color: var(--g6);
+      }
+      .btn-ghost::before {
+        content: '';
+        width: 2rem;
+        height: 1px;
+        background: currentColor;
+        transition: width 0.3s;
+      }
+      .btn-ghost:hover::before {
+        width: 3rem;
+      }
+
+      /* HERO RIGHT — Botanical Visual */
+      .hero-right {
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-botanical {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Big organic circle background */
+      .bio-circle {
+        width: 70vmin;
+        height: 70vmin;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 40% 40%,
+          var(--g3),
+          var(--g1) 70%
+        );
+        position: absolute;
+        right: -10%;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        animation: scaleIn 1.2s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      /* SVG Leaf decorations */
+      .leaf-cluster {
+        position: absolute;
+        opacity: 0;
+        animation: fadeIn 1s 1s ease forwards;
+      }
+
+      .counter-strip {
+        position: absolute;
+        bottom: 3rem;
+        right: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        opacity: 0;
+        animation: fadeUp 0.8s 1.2s ease forwards;
+      }
+      .counter-item {
+        text-align: right;
+      }
+      .counter-num {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: var(--g6);
+        line-height: 1;
+      }
+      .counter-label {
+        font-size: 0.72rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--g7);
+        opacity: 0.6;
+      }
+
+      /* Ticker */
+      .ticker {
+        background: var(--g2);
+        border-top: 1px solid var(--g3);
+        border-bottom: 1px solid var(--g3);
+        padding: 0.85rem 0;
+        overflow: hidden;
+        position: relative;
+      }
+      .ticker-inner {
+        display: flex;
+        gap: 0;
+        white-space: nowrap;
+        animation: ticker 22s linear infinite;
+      }
+      .ticker-text {
+        font-size: 0.78rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--g6);
+        padding: 0 2rem;
+      }
+      .ticker-dot {
+        color: var(--gold);
+        font-size: 1rem;
+        margin: 0 0.5rem;
+      }
+      @keyframes ticker {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* SECTION: Produk */
+      .section {
+        padding: 7rem 3rem;
+      }
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 4rem;
+        border-bottom: 1px solid var(--g2);
+        padding-bottom: 2rem;
+      }
+      .section-num {
+        font-size: 0.7rem;
+        color: var(--gold);
+        letter-spacing: 0.2em;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+      .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2.2rem, 4vw, 3.2rem);
+        font-weight: 700;
+        color: var(--g9);
+        line-height: 1.1;
+      }
+      .section-title em {
+        color: var(--g6);
+        font-style: italic;
+      }
+      .section-link {
+        color: var(--g6);
+        text-decoration: none;
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: gap 0.3s;
+      }
+      .section-link:hover {
+        gap: 1rem;
+      }
+
+      /* Product Cards — Masonry-like */
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-auto-rows: 90px;
+        gap: 1.5rem;
+      }
+
+      .product-card {
+        background: var(--g1);
+        border: 1px solid var(--g2);
+        position: relative;
+        overflow: hidden;
+        transition:
+          border-color 0.4s,
+          transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: none;
+      }
+      .product-card:hover {
+        border-color: var(--g4);
+        transform: translateY(-4px);
+      }
+
+      .card-a {
+        grid-column: 1 / 6;
+        grid-row: 1 / 4;
+      }
+      .card-b {
+        grid-column: 6 / 9;
+        grid-row: 1 / 3;
+      }
+      .card-c {
+        grid-column: 9 / 13;
+        grid-row: 1 / 5;
+      }
+      .card-d {
+        grid-column: 6 / 9;
+        grid-row: 3 / 5;
+      }
+      .card-e {
+        grid-column: 1 / 5;
+        grid-row: 4 / 6;
+      }
+      .card-f {
+        grid-column: 5 / 9;
+        grid-row: 5 / 7;
+      }
+      .card-g {
+        grid-column: 9 / 13;
+        grid-row: 5 / 7;
+      }
+      .card-h {
+        grid-column: 1 / 5;
+        grid-row: 6 / 8;
+      }
+
+      .card-bg {
+        position: absolute;
+        inset: 0;
+        font-size: 8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.08;
+        transition:
+          opacity 0.4s,
+          transform 0.6s;
+        pointer-events: none;
+        filter: grayscale(0.3);
+      }
+      .product-card:hover .card-bg {
+        opacity: 0.18;
+        transform: scale(1.1) rotate(5deg);
+      }
+
+      .card-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1.4rem 1.6rem;
+        background: linear-gradient(
+          to top,
+          rgba(10, 26, 12, 0.95) 0%,
+          transparent 100%
+        );
+      }
+      .card-tag {
+        font-size: 0.65rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 0.3rem;
+      }
+      .card-name {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--g9);
+        margin-bottom: 0.2rem;
+      }
+      .card-name-sm {
+        font-size: 0.95rem;
+      }
+      .card-desc {
+        font-size: 0.78rem;
+        color: var(--g7);
+        opacity: 0.7;
+        line-height: 1.4;
+      }
+      .card-price {
+        margin-top: 0.6rem;
+        font-size: 0.8rem;
+        color: var(--g6);
+        font-weight: 500;
+      }
+
+      /* SEASONAL BAR */
+      .seasonal {
+        background: var(--g1);
+        border: 1px solid var(--g2);
+        margin: 0 3rem;
+        padding: 3rem;
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 4rem;
+        align-items: center;
+      }
+      .seasonal-label {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--g7);
+        line-height: 1.2;
+      }
+      .seasonal-label strong {
+        display: block;
+        color: var(--g9);
+        font-style: normal;
+        font-weight: 900;
+      }
+
+      .season-months {
+        display: flex;
+        gap: 0;
+      }
+      .month {
+        flex: 1;
+        text-align: center;
+        border-right: 1px solid var(--g2);
+        padding: 0.6rem 0.3rem;
+        position: relative;
+      }
+      .month:last-child {
+        border-right: none;
+      }
+      .month-name {
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        color: var(--g7);
+        opacity: 0.5;
+        text-transform: uppercase;
+        margin-bottom: 0.8rem;
+      }
+      .month-bar {
+        width: 100%;
+        height: 60px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .crop-indicator {
+        height: 100%;
+        border-radius: 2px;
+        transition: opacity 0.3s;
+        position: relative;
+      }
+      .crop-indicator.active {
+        opacity: 1;
+      }
+      .crop-indicator.inactive {
+        opacity: 0.15;
+      }
+      .crop-a {
+        background: var(--g5);
+      }
+      .crop-b {
+        background: var(--gold);
+      }
+      .crop-c {
+        background: var(--g7);
+      }
+
+      .season-legend {
+        margin-top: 1.5rem;
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--g7);
+        opacity: 0.7;
+      }
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+      }
+
+      /* PROCESS / HOW */
+      .process-section {
+        padding: 7rem 3rem;
+        position: relative;
+      }
+      .process-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+        margin-top: 4rem;
+        border: 1px solid var(--g2);
+      }
+      .process-step {
+        padding: 3rem 2rem;
+        border-right: 1px solid var(--g2);
+        position: relative;
+        transition: background 0.4s;
+      }
+      .process-step:last-child {
+        border-right: none;
+      }
+      .process-step:hover {
+        background: var(--g1);
+      }
+      .process-step-num {
+        font-family: 'Playfair Display', serif;
+        font-size: 4rem;
+        font-weight: 900;
+        color: var(--g3);
+        line-height: 1;
+        margin-bottom: 1rem;
+      }
+      .process-step-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+      .process-step-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--g9);
+        margin-bottom: 0.8rem;
+      }
+      .process-step-desc {
+        font-size: 0.82rem;
+        color: var(--g7);
+        opacity: 0.65;
+        line-height: 1.7;
+      }
+      .process-line {
+        position: absolute;
+        top: 2.5rem;
+        right: -1px;
+        width: 1px;
+        height: 40%;
+        background: var(--g4);
+        display: none;
+      }
+
+      /* TESTIMONIALS */
+      .testimonials {
+        padding: 7rem 3rem;
+        background: var(--g1);
+        border-top: 1px solid var(--g2);
+        border-bottom: 1px solid var(--g2);
+      }
+      .testimonials-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 2rem;
+        margin-top: 4rem;
+      }
+      .testimonial-card {
+        border: 1px solid var(--g2);
+        padding: 2rem;
+        position: relative;
+        transition: border-color 0.3s;
+      }
+      .testimonial-card:hover {
+        border-color: var(--g4);
+      }
+      .testimonial-quote {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.1rem;
+        font-style: italic;
+        color: var(--g8);
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+      }
+      .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
+      .author-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--g3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+      }
+      .author-name {
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--g8);
+      }
+      .author-loc {
+        font-size: 0.72rem;
+        color: var(--g6);
+        opacity: 0.6;
+      }
+      .stars {
+        color: var(--gold);
+        font-size: 0.8rem;
+        margin-bottom: 0.8rem;
+      }
+
+      /* MARQUEE BANNER */
+      .marquee-banner {
+        padding: 2rem 0;
+        overflow: hidden;
+        border-top: 1px solid var(--g2);
+      }
+      .marquee-inner {
+        display: flex;
+        animation: ticker 30s linear infinite;
+        white-space: nowrap;
+      }
+      .marquee-text {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        font-weight: 900;
+        font-style: italic;
+        color: var(--g2);
+        -webkit-text-stroke: 1px var(--g3);
+        padding: 0 3rem;
+        letter-spacing: -0.02em;
+      }
+      .marquee-text.filled {
+        color: var(--g3);
+        -webkit-text-stroke: none;
+      }
+
+      /* CTA Section */
+      .cta-section {
+        padding: 8rem 3rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-bg-circle {
+        position: absolute;
+        width: 60vw;
+        height: 60vw;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--g2) 0%, transparent 70%);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+      .cta-label {
+        font-size: 0.72rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1.5rem;
+      }
+      .cta-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(2.5rem, 5vw, 4.5rem);
+        font-weight: 900;
+        color: var(--g9);
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+      .cta-title em {
+        color: var(--g6);
+        font-style: italic;
+      }
+      .cta-sub {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.2rem;
+        font-style: italic;
+        color: var(--g7);
+        margin-bottom: 3rem;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+      }
+      .cta-form {
+        display: flex;
+        justify-content: center;
+        gap: 0;
+        max-width: 480px;
+        margin: 0 auto 1rem;
+        position: relative;
+      }
+      .cta-input {
+        flex: 1;
+        background: var(--g1);
+        border: 1px solid var(--g3);
+        border-right: none;
+        color: var(--g8);
+        padding: 1rem 1.2rem;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+      .cta-input:focus {
+        border-color: var(--g5);
+      }
+      .cta-input::placeholder {
+        color: var(--g7);
+        opacity: 0.4;
+      }
+      .cta-btn {
+        background: var(--g4);
+        border: 1px solid var(--g4);
+        color: var(--g9);
+        padding: 1rem 1.8rem;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: none;
+        transition: background 0.3s;
+        letter-spacing: 0.06em;
+      }
+      .cta-btn:hover {
+        background: var(--g5);
+      }
+      .cta-note {
+        font-size: 0.72rem;
+        color: var(--g7);
+        opacity: 0.4;
+        letter-spacing: 0.08em;
+      }
+
+      /* FOOTER */
+      footer {
+        background: var(--g1);
+        border-top: 1px solid var(--g2);
+        padding: 4rem 3rem 2rem;
+      }
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 4rem;
+        margin-bottom: 4rem;
+      }
+      .footer-brand .nav-logo {
+        display: block;
+        margin-bottom: 1rem;
+        font-size: 1.6rem;
+      }
+      .footer-brand p {
+        font-size: 0.82rem;
+        color: var(--g7);
+        opacity: 0.6;
+        line-height: 1.7;
+        max-width: 260px;
+      }
+      .footer-col h4 {
+        font-size: 0.72rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1.2rem;
+      }
+      .footer-col ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .footer-col ul a {
+        color: var(--g7);
+        text-decoration: none;
+        font-size: 0.82rem;
+        opacity: 0.6;
+        transition: opacity 0.3s;
+      }
+      .footer-col ul a:hover {
+        opacity: 1;
+      }
+      .footer-bottom {
+        border-top: 1px solid var(--g2);
+        padding-top: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .footer-copy {
+        font-size: 0.72rem;
+        color: var(--g7);
+        opacity: 0.35;
+        letter-spacing: 0.08em;
+      }
+      .footer-socials {
+        display: flex;
+        gap: 1rem;
+      }
+      .footer-social {
+        width: 32px;
+        height: 32px;
+        border: 1px solid var(--g3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--g6);
+        font-size: 0.75rem;
+        transition:
+          border-color 0.3s,
+          background 0.3s;
+        text-decoration: none;
+      }
+      .footer-social:hover {
+        border-color: var(--g5);
+        background: var(--g2);
+      }
+
+      /* ANIMATIONS */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: translateY(-50%) scale(0.8);
+        }
+        to {
+          opacity: 0.6;
+          transform: translateY(-50%) scale(1);
+        }
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        33% {
+          transform: translateY(-12px) rotate(2deg);
+        }
+        66% {
+          transform: translateY(-6px) rotate(-1deg);
+        }
+      }
+      @keyframes spinSlow {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Scroll reveal */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Organic SVG decorations */
+      .deco-ring {
+        position: absolute;
+        border-radius: 50%;
+        border: 1px solid var(--g3);
+        opacity: 0.3;
+        animation: spinSlow 40s linear infinite;
+        pointer-events: none;
+      }
+
+      /* Hover tooltip for season chart */
+      .crop-tooltip {
+        position: absolute;
+        background: var(--g0);
+        border: 1px solid var(--g4);
+        padding: 0.4rem 0.8rem;
+        font-size: 0.72rem;
+        color: var(--g7);
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s;
+        z-index: 10;
+        top: -2.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .month:hover .crop-tooltip {
+        opacity: 1;
+      }
+
+      @media (max-width: 900px) {
+        nav {
+          padding: 1.2rem 1.5rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .hero-right {
+          display: none;
+        }
+        .hero-left {
+          padding: 8rem 1.5rem 4rem;
+        }
+        .section {
+          padding: 4rem 1.5rem;
+        }
+        .product-grid {
+          grid-template-columns: 1fr 1fr;
+          grid-auto-rows: auto;
+        }
+        .card-a,
+        .card-b,
+        .card-c,
+        .card-d,
+        .card-e,
+        .card-f,
+        .card-g,
+        .card-h {
+          grid-column: auto;
+          grid-row: auto;
+          height: 240px;
+        }
+        .seasonal {
+          grid-template-columns: 1fr;
+          margin: 0 1.5rem;
+          padding: 2rem;
+          gap: 2rem;
+        }
+        .process-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .testimonials-inner {
+          grid-template-columns: 1fr;
+        }
+        .footer-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 2rem;
+        }
+        .process-section {
+          padding: 4rem 1.5rem;
+        }
+        .testimonials {
+          padding: 4rem 1.5rem;
+        }
+        .cta-section {
+          padding: 5rem 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- NAV -->
+    <nav>
+      <a href="#" class="nav-logo">Kebun<span>Rasa</span></a>
+      <ul class="nav-links">
+        <li><a href="#produk">Produk</a></li>
+        <li><a href="#musim">Musim Tanam</a></li>
+        <li><a href="#proses">Proses</a></li>
+        <li><a href="#pesan" class="nav-cta">Pesan Sekarang</a></li>
+      </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-left">
+        <p class="hero-tag">✦ Dari Tanah Ke Meja Makan Anda</p>
+        <h1 class="hero-title">
+          Tumbuh<br />
+          dari <em>Bumi</em><br />
+          yang Jujur
+        </h1>
+        <p class="hero-sub">
+          Tanaman konsumsi segar dirawat dengan tangan, dipanen tepat waktu, dan
+          dikirim langsung ke dapur Anda.
+        </p>
+        <div class="hero-actions">
+          <a href="#produk" class="btn-primary"><span>Jelajahi Produk</span></a>
+          <a href="#proses" class="btn-ghost">Cara Kerja Kami</a>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-botanical">
+          <div class="bio-circle"></div>
+
+          <!-- Decorative rings -->
+          <div
+            class="deco-ring"
+            style="
+              width: 55vmin;
+              height: 55vmin;
+              right: -5%;
+              top: 50%;
+              transform: translateY(-50%);
+              animation-duration: 60s;
+              animation-direction: reverse;
+            "
+          ></div>
+
+          <!-- Leaf SVGs -->
+          <div class="leaf-cluster" style="right: 8%; top: 15%">
+            <svg width="120" height="180" viewBox="0 0 120 180" fill="none">
+              <path
+                d="M60 170 C20 130, 5 80, 30 30 C45 5, 80 5, 95 30 C115 70, 100 130, 60 170Z"
+                fill="var(--g4)"
+                opacity="0.7"
+              />
+              <path
+                d="M60 170 L60 30"
+                stroke="var(--g6)"
+                stroke-width="1.5"
+                opacity="0.5"
+              />
+              <path
+                d="M60 80 C40 65, 25 55, 30 45"
+                stroke="var(--g6)"
+                stroke-width="1"
+                opacity="0.4"
+              />
+              <path
+                d="M60 100 C80 85, 90 70, 88 58"
+                stroke="var(--g6)"
+                stroke-width="1"
+                opacity="0.4"
+              />
+              <path
+                d="M60 120 C38 105, 22 98, 28 85"
+                stroke="var(--g6)"
+                stroke-width="1"
+                opacity="0.4"
+              />
+              <path
+                d="M60 140 C82 125, 95 115, 90 102"
+                stroke="var(--g6)"
+                stroke-width="1"
+                opacity="0.4"
+              />
+            </svg>
+          </div>
+          <div
+            class="leaf-cluster"
+            style="
+              right: 30%;
+              top: 20%;
+              animation: float 7s 1s ease-in-out infinite;
+            "
+          >
+            <svg width="80" height="120" viewBox="0 0 80 120" fill="none">
+              <path
+                d="M40 115 C10 85, 2 50, 18 20 C28 3, 55 3, 65 22 C80 50, 70 88, 40 115Z"
+                fill="var(--g5)"
+                opacity="0.5"
+              />
+              <path
+                d="M40 115 L40 20"
+                stroke="var(--g7)"
+                stroke-width="1"
+                opacity="0.4"
+              />
+            </svg>
+          </div>
+          <div
+            class="leaf-cluster"
+            style="
+              right: 10%;
+              bottom: 15%;
+              animation: float 9s 2s ease-in-out infinite;
+            "
+          >
+            <svg width="100" height="70" viewBox="0 0 100 70" fill="none">
+              <path
+                d="M5 35 C15 10, 50 0, 95 35 C50 70, 15 60, 5 35Z"
+                fill="var(--g3)"
+                opacity="0.8"
+              />
+              <path
+                d="M5 35 L95 35"
+                stroke="var(--g5)"
+                stroke-width="1"
+                opacity="0.4"
+              />
+              <path
+                d="M30 35 C28 20, 32 12, 40 8"
+                stroke="var(--g5)"
+                stroke-width="0.8"
+                opacity="0.3"
+              />
+              <path
+                d="M55 35 C57 18, 65 9, 75 12"
+                stroke="var(--g5)"
+                stroke-width="0.8"
+                opacity="0.3"
+              />
+            </svg>
+          </div>
+
+          <!-- Floating produce illustrations -->
+          <div
+            class="leaf-cluster"
+            style="
+              right: 22%;
+              top: 42%;
+              animation: float 6s ease-in-out infinite;
+              font-size: 5rem;
+            "
+          >
+            🥬
+          </div>
+          <div
+            class="leaf-cluster"
+            style="
+              right: 40%;
+              top: 55%;
+              animation: float 8s 1.5s ease-in-out infinite;
+              font-size: 3rem;
+            "
+          >
+            🍅
+          </div>
+          <div
+            class="leaf-cluster"
+            style="
+              right: 12%;
+              top: 60%;
+              animation: float 7s 0.5s ease-in-out infinite;
+              font-size: 2.5rem;
+            "
+          >
+            🥦
+          </div>
+        </div>
+
+        <div class="counter-strip">
+          <div class="counter-item">
+            <div class="counter-num" data-target="120">0</div>
+            <div class="counter-label">Jenis Tanaman</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-num" data-target="8">0</div>
+            <div class="counter-label">Tahun Pengalaman</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-num" data-target="2400">0</div>
+            <div class="counter-label">Pelanggan Puas</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TICKER -->
+    <div class="ticker">
+      <div class="ticker-inner">
+        <span class="ticker-text">Panen Segar Setiap Hari</span
+        ><span class="ticker-dot">✦</span>
+        <span class="ticker-text">Bebas Pestisida Kimia</span
+        ><span class="ticker-dot">✦</span>
+        <span class="ticker-text">Pengiriman ke Seluruh Kota</span
+        ><span class="ticker-dot">✦</span>
+        <span class="ticker-text">Organik & Bersertifikat</span
+        ><span class="ticker-dot">✦</span>
+        <span class="ticker-text">Langsung dari Petani</span
+        ><span class="ticker-dot">✦</span>
+        <span class="ticker-text">Panen Segar Setiap Hari</span
+        ><span class="ticker-dot">✦</span>
+        <span class="ticker-text">Bebas Pestisida Kimia</span
+        ><span class="ticker-dot">✦</span>
+        <span class="ticker-text">Pengiriman ke Seluruh Kota</span
+        ><span class="ticker-dot">✦</span>
+        <span class="ticker-text">Organik & Bersertifikat</span
+        ><span class="ticker-dot">✦</span>
+        <span class="ticker-text">Langsung dari Petani</span
+        ><span class="ticker-dot">✦</span>
+      </div>
+    </div>
+
+    <!-- PRODUK -->
+    <section class="section" id="produk">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-num">01 — Koleksi</div>
+          <h2 class="section-title">
+            Tanaman <em>Pilihan</em><br />dari Kebun Kami
+          </h2>
+        </div>
+        <a href="#" class="section-link">Lihat Semua →</a>
+      </div>
+
+      <div class="product-grid">
+        <div class="product-card card-a reveal">
+          <div class="card-bg">🥬</div>
+          <div class="card-content">
+            <div class="card-tag">Sayuran Daun</div>
+            <div class="card-name">Selada Hidroponik</div>
+            <div class="card-desc">
+              Renyah, segar, dipanen 6 jam sebelum pengiriman
+            </div>
+            <div class="card-price">Rp 12.000 / 250gr</div>
+          </div>
+        </div>
+
+        <div class="product-card card-b reveal">
+          <div class="card-bg">🍅</div>
+          <div class="card-content">
+            <div class="card-tag">Buah Sayur</div>
+            <div class="card-name card-name-sm">Tomat Cherry Merah</div>
+            <div class="card-price">Rp 18.000 / 300gr</div>
+          </div>
+        </div>
+
+        <div class="product-card card-c reveal">
+          <div class="card-bg">🌿</div>
+          <div class="card-content">
+            <div class="card-tag">Herbal & Rempah</div>
+            <div class="card-name">Rempah Dapur Segar</div>
+            <div class="card-desc">
+              Kemangi, daun jeruk, sereh, daun pandan — aromanya nyata
+            </div>
+            <div class="card-price">Rp 8.000 / ikat</div>
+          </div>
+        </div>
+
+        <div class="product-card card-d reveal">
+          <div class="card-bg">🥦</div>
+          <div class="card-content">
+            <div class="card-tag">Brassica</div>
+            <div class="card-name card-name-sm">Brokoli Premium</div>
+            <div class="card-price">Rp 22.000 / 500gr</div>
+          </div>
+        </div>
+
+        <div class="product-card card-e reveal">
+          <div class="card-bg">🫑</div>
+          <div class="card-content">
+            <div class="card-tag">Cabai & Paprika</div>
+            <div class="card-name card-name-sm">Paprika Pelangi</div>
+            <div class="card-price">Rp 25.000 / 3 buah</div>
+          </div>
+        </div>
+
+        <div class="product-card card-f reveal">
+          <div class="card-bg">🌾</div>
+          <div class="card-content">
+            <div class="card-tag">Microgreens</div>
+            <div class="card-name card-name-sm">Microgreens Mix</div>
+            <div class="card-desc">
+              Kaya nutrisi, cocok untuk salad & garnish
+            </div>
+            <div class="card-price">Rp 35.000 / 100gr</div>
+          </div>
+        </div>
+
+        <div class="product-card card-g reveal">
+          <div class="card-bg">🥕</div>
+          <div class="card-content">
+            <div class="card-tag">Umbi</div>
+            <div class="card-name card-name-sm">Wortel Manis Lokal</div>
+            <div class="card-price">Rp 14.000 / 500gr</div>
+          </div>
+        </div>
+
+        <div class="product-card card-h reveal">
+          <div class="card-bg">🫚</div>
+          <div class="card-content">
+            <div class="card-tag">Paket Bundling</div>
+            <div class="card-name card-name-sm">Box Mingguan</div>
+            <div class="card-desc">
+              5 jenis sayur segar pilihan kami tiap minggu
+            </div>
+            <div class="card-price">Rp 95.000 / box</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEASONAL CHART -->
+    <div class="seasonal reveal" id="musim">
+      <div>
+        <div class="seasonal-label">
+          Kalender<br /><strong>Musim Tanam</strong>
+        </div>
+        <div class="season-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--g5)"></div>
+            Sayuran Daun
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--gold)"></div>
+            Buah Sayur
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--g7)"></div>
+            Herbal & Umbi
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="season-months" id="seasonChart">
+          <!-- Generated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MARQUEE -->
+    <div class="marquee-banner">
+      <div class="marquee-inner">
+        <span class="marquee-text">Dari Tanah</span>
+        <span class="marquee-text filled">ke Meja Makan</span>
+        <span class="marquee-text">Dari Tanah</span>
+        <span class="marquee-text filled">ke Meja Makan</span>
+        <span class="marquee-text">Dari Tanah</span>
+        <span class="marquee-text filled">ke Meja Makan</span>
+        <span class="marquee-text">Dari Tanah</span>
+        <span class="marquee-text filled">ke Meja Makan</span>
+      </div>
+    </div>
+
+    <!-- PROSES -->
+    <section class="process-section" id="proses">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-num">02 — Metode</div>
+          <h2 class="section-title">
+            Dari <em>Benih</em><br />hingga Pintu Anda
+          </h2>
+        </div>
+      </div>
+
+      <div class="process-grid">
+        <div class="process-step reveal">
+          <div class="process-step-num">01</div>
+          <div class="process-step-icon">🌱</div>
+          <div class="process-step-title">Seleksi Benih</div>
+          <p class="process-step-desc">
+            Hanya benih varietas unggul non-GMO yang kami tanam. Setiap batch
+            dicatat asal-usul dan tanggal tanamnya.
+          </p>
+        </div>
+        <div class="process-step reveal" style="transition-delay: 0.1s">
+          <div class="process-step-num">02</div>
+          <div class="process-step-icon">💧</div>
+          <div class="process-step-title">Perawatan Alami</div>
+          <p class="process-step-desc">
+            Pupuk kompos organik dan sistem irigasi tetes hemat air. Tidak ada
+            pestisida sintetis — serius.
+          </p>
+        </div>
+        <div class="process-step reveal" style="transition-delay: 0.2s">
+          <div class="process-step-num">03</div>
+          <div class="process-step-icon">✂️</div>
+          <div class="process-step-title">Panen Tepat Waktu</div>
+          <p class="process-step-desc">
+            Kami memanen sesuai kematangan optimal — bukan jadwal logistik. Rasa
+            dan nutrisi di puncaknya.
+          </p>
+        </div>
+        <div class="process-step reveal" style="transition-delay: 0.3s">
+          <div class="process-step-num">04</div>
+          <div class="process-step-icon">📦</div>
+          <div class="process-step-title">Kemas & Kirim</div>
+          <p class="process-step-desc">
+            Dikemas dalam packaging ramah lingkungan dan dikirim dalam 12 jam
+            setelah panen ke lokasi Anda.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials">
+      <div class="section-header reveal">
+        <div>
+          <div class="section-num">03 — Ulasan</div>
+          <h2 class="section-title">Yang Mereka<br /><em>Rasakan</em></h2>
+        </div>
+      </div>
+      <div class="testimonials-inner">
+        <div class="testimonial-card reveal">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-quote">
+            "Selada hidroponinya masih crispy sampai 4 hari di kulkas. Belum
+            pernah beli sayur sesegar ini dari mana pun."
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar">🙋‍♀️</div>
+            <div>
+              <div class="author-name">Dewi Rahayu</div>
+              <div class="author-loc">Ibu Rumah Tangga · Bandung</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal" style="transition-delay: 0.1s">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-quote">
+            "Saya chef di restoran dan pakai produk KebunRasa sudah 2 tahun.
+            Konsistensi kualitas dan pengirimannya luar biasa."
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar">👨‍🍳</div>
+            <div>
+              <div class="author-name">Rizal Fauzi</div>
+              <div class="author-loc">Head Chef · Jakarta Selatan</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal" style="transition-delay: 0.2s">
+          <div class="stars">★★★★☆</div>
+          <p class="testimonial-quote">
+            "Box mingguan-nya jadi solusi praktis buat keluarga kami. Variasi
+            sayurnya bagus dan anak-anak jadi suka makan sayur!"
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar">👨‍👩‍👧</div>
+            <div>
+              <div class="author-name">Keluarga Santoso</div>
+              <div class="author-loc">Pelanggan Berlangganan · Surabaya</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" id="pesan">
+      <div class="cta-bg-circle"></div>
+      <p class="cta-label">✦ Mulai Sekarang</p>
+      <h2 class="cta-title">Pesan <em>Pertama</em><br />Gratis Ongkir</h2>
+      <p class="cta-sub">
+        Masukkan nomor WhatsApp Anda dan kami akan hubungi untuk konsultasi
+        kebutuhan sayur harian.
+      </p>
+      <div class="cta-form">
+        <input class="cta-input" type="tel" placeholder="+62 8xx-xxxx-xxxx" />
+        <button class="cta-btn">Hubungi Saya</button>
+      </div>
+      <p class="cta-note">
+        TANPA SPAM · HANYA UNTUK KONSULTASI · PRIVASI TERJAGA
+      </p>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="nav-logo">Kebun<span>Rasa</span></a>
+          <p>
+            Merawat tanah, menghormati musim, mengirim kejujuran — satu panen
+            setiap hari.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Produk</h4>
+          <ul>
+            <li><a href="#">Sayuran Daun</a></li>
+            <li><a href="#">Buah Sayur</a></li>
+            <li><a href="#">Herbal & Rempah</a></li>
+            <li><a href="#">Microgreens</a></li>
+            <li><a href="#">Box Mingguan</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Informasi</h4>
+          <ul>
+            <li><a href="#">Tentang Kami</a></li>
+            <li><a href="#">Cara Pemesanan</a></li>
+            <li><a href="#">Jadwal Pengiriman</a></li>
+            <li><a href="#">Sertifikasi Organik</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Kontak</h4>
+          <ul>
+            <li><a href="#">WhatsApp Kami</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Email</a></li>
+            <li><a href="#">Kunjungi Kebun</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2025 KebunRasa · Hak Cipta Dilindungi</span>
+        <div class="footer-socials">
+          <a href="#" class="footer-social">ig</a>
+          <a href="#" class="footer-social">wa</a>
+          <a href="#" class="footer-social">yt</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Custom cursor
+      const cursor = document.getElementById('cursor');
+      const ring = document.getElementById('cursorRing');
+      let mx = 0,
+        my = 0,
+        rx = 0,
+        ry = 0;
+
+      document.addEventListener('mousemove', (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+        cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px)`;
+      });
+
+      function animateRing() {
+        rx += (mx - rx - 18) * 0.12;
+        ry += (my - ry - 18) * 0.12;
+        ring.style.transform = `translate(${rx}px, ${ry}px)`;
+        requestAnimationFrame(animateRing);
+      }
+      animateRing();
+
+      document
+        .querySelectorAll('a, button, .product-card, .process-step')
+        .forEach((el) => {
+          el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+          el.addEventListener('mouseleave', () =>
+            ring.classList.remove('hover'),
+          );
+        });
+
+      // Scroll reveal
+      const reveals = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add('visible');
+          });
+        },
+        { threshold: 0.12 },
+      );
+      reveals.forEach((r) => observer.observe(r));
+
+      // Counter animation
+      function animateCounter(el, target) {
+        let current = 0;
+        const step = target / 60;
+        const timer = setInterval(() => {
+          current += step;
+          if (current >= target) {
+            current = target;
+            clearInterval(timer);
+          }
+          el.textContent = Math.floor(current).toLocaleString('id-ID');
+        }, 24);
+      }
+
+      const counters = document.querySelectorAll('[data-target]');
+      const counterObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              animateCounter(e.target, parseInt(e.target.dataset.target));
+              counterObserver.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.5 },
+      );
+      counters.forEach((c) => counterObserver.observe(c));
+
+      // Seasonal chart
+      const months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'Mei',
+        'Jun',
+        'Jul',
+        'Agu',
+        'Sep',
+        'Okt',
+        'Nov',
+        'Des',
+      ];
+      const data = {
+        sayuran: [1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1],
+        buah: [0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+        herbal: [1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+      };
+      const labels = {
+        sayuran: 'Sayuran Daun',
+        buah: 'Buah Sayur',
+        herbal: 'Herbal & Umbi',
+      };
+
+      const chart = document.getElementById('seasonChart');
+      months.forEach((m, i) => {
+        const tip = [];
+        if (data.sayuran[i]) tip.push(labels.sayuran);
+        if (data.buah[i]) tip.push(labels.buah);
+        if (data.herbal[i]) tip.push(labels.herbal);
+
+        chart.innerHTML += `
+      <div class="month">
+        <div class="month-name">${m}</div>
+        <div class="month-bar">
+          <div class="crop-indicator crop-a ${data.sayuran[i] ? 'active' : 'inactive'}"></div>
+          <div class="crop-indicator crop-b ${data.buah[i] ? 'active' : 'inactive'}"></div>
+          <div class="crop-indicator crop-c ${data.herbal[i] ? 'active' : 'inactive'}"></div>
+        </div>
+        <div class="crop-tooltip">${tip.length ? tip.join(', ') : 'Off-season'}</div>
+      </div>
+    `;
+      });
+
+      // CTA button
+      document.querySelector('.cta-btn').addEventListener('click', () => {
+        const val = document.querySelector('.cta-input').value;
+        if (val.trim()) {
+          alert(`Terima kasih! Kami akan menghubungi ${val} segera 🌱`);
+        } else {
+          document.querySelector('.cta-input').focus();
+        }
+      });
+    </script>
+  </body>
+</html>
